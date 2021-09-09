@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class PhoneResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,22 +14,11 @@ class UserResource extends JsonResource
      */
     public function toArray($request)
     {
-        // return parent::toArray($request);
         return [
-            'id' => $this->id,
-            'nombre' => $this->name,
-            'email' => $this->email,
+            'alias_numero' => $this->alias_number,
+            'numero' => $this->number,
             'creado' => $this->created_at->format('y-m-d'),
             'actualizado' => $this->updated_at->format('y-m-d'),
-            'direccion' => new AddresseResource( $this->direction ),
-            'telefonos' => PhoneResource::collection( $this->phone )
         ];
     }
-    
-    public function with( $request ){
-        return [
-            'status' => true
-        ];
-    }
-
 }

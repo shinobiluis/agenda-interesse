@@ -19,7 +19,7 @@ class UsersController extends Controller
      */
     public function index()
     {
-        //
+        return UserResource::collection( User::all() );
     }
 
     /**
@@ -30,19 +30,31 @@ class UsersController extends Controller
      */
     public function store(UserRequest $request)
     {
+        // dd( $request->all() );
         // iniciamos el proceso de transacciones
         DB::beginTransaction();
         try {
             // insertamos en tablas
-            $response = User::create( $request->only(['name','email']) );
+            $user = User::create( $request->only(['name','email']) );
+            $user->direction()->create( $request->only(['alias_direction', 'direction','postal_code']) );
+            $user->phone()->create( $request->only(['alias_number','number']) );
             // hacemos el commit
             DB::commit();
-        } catch (\Exception $e) {
+        } catch ( Throwable $e) {
             DB::rollback();
-            throw $e;
+            return response()->json([
+                'status' => 'false',
+                'mensaje' => 'El registro fallo, no se inserto la información'
+            ]);
         }
-
-        return (new UserResource( $response ));
+        // Consultamos toda la informacion del usuario para traer todos los telefonos y direccion
+        $user = User::with([
+            'direction',
+            'phone'
+        ])->find($user->id);
+        // respondemos con el api resource del usuario
+        return (new UserResource( $user ));
+        
     }
 
     /**
@@ -51,9 +63,9 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $user)
     {
-        //
+        return new UserResource( $user );
     }
 
     /**

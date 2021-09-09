@@ -18,7 +18,7 @@ class CreateAddressesTable extends Migration
             $table->string('alias_direction');
             $table->string('direction');
             $table->string('postal_code');
-            // $table->integer('user_id')->unsigned();
+            $table->integer('user_id')->unsigned();
             // $table->foreing('user_id')->reference('id')->on('users');
             $table->timestamps();
         });

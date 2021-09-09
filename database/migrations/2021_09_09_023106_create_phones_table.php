@@ -17,7 +17,7 @@ class CreatePhonesTable extends Migration
             $table->increments('id');
             $table->string('alias_number');
             $table->string('number');
-            // $table->integer('user_id')->unsigned();
+            $table->integer('user_id')->unsigned();
             // $table->foreing('user_id')->reference('id')->on('users');
             $table->timestamps();
         });

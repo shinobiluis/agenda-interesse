@@ -19,4 +19,4 @@ use App\Http\Controllers\UsersController;
 // });
 
 
-Route::apiResource('users', UsersController::class );
+Route::apiResource('users', UsersController::class )->except(['update','destroy']);

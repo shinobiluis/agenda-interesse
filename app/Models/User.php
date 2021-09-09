@@ -20,7 +20,6 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
-        'password',
     ];
 
     /**
@@ -41,4 +40,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function direction(){
+        return $this->hasOne( Addresse::class,'user_id', 'id' );
+    }
+
+    public function phone(){
+          return $this->hasMany( Phone::class,'user_id', 'id' );
+    }
 }

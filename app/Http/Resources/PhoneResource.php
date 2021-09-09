@@ -15,6 +15,7 @@ class PhoneResource extends JsonResource
     public function toArray($request)
     {
         return [
+            'id' => $this->id,
             'alias_numero' => $this->alias_number,
             'numero' => $this->number,
             'creado' => $this->created_at->format('y-m-d'),

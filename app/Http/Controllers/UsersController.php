@@ -34,14 +34,15 @@ class UsersController extends Controller
         DB::beginTransaction();
         try {
             // insertamos en tablas
-            $response = User::create( $request->all() );
+            $response = User::create( $request->only(['name','email']) );
             // hacemos el commit
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
             throw $e;
         }
-        return (new UserResource());
+
+        return (new UserResource( $response ));
     }
 
     /**

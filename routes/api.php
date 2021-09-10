@@ -20,6 +20,6 @@ use App\Http\Controllers\PhonesController;
 // });
 
 // api para el registro de usuarios con su telefono y direccion
-Route::apiResource('users', UsersController::class )->except(['update','destroy']);
+Route::apiResource('users', UsersController::class )->except(['destroy']);
 // api para poder agregar mas telefonos
-Route::apiResource('phones', PhonesController::class )->only(['store','show']);
+Route::apiResource('phones', PhonesController::class )->except(['index']);

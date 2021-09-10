@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 // importamos las validaciones del request
 use App\Http\Requests\UserRequest;
+use App\Http\Requests\UserUpdateRequest;
 // importamos las apiResource
 use App\Http\Resources\UserResource; 
 class UsersController extends Controller
@@ -30,7 +31,6 @@ class UsersController extends Controller
      */
     public function store(UserRequest $request)
     {
-        // dd( $request->all() );
         // iniciamos el proceso de transacciones
         DB::beginTransaction();
         try {
@@ -54,7 +54,6 @@ class UsersController extends Controller
         ])->find($user->id);
         // respondemos con el api resource del usuario
         return (new UserResource( $user ));
-        
     }
 
     /**
@@ -75,9 +74,10 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UserUpdateRequest $request, User $user)
     {
-        //
+        $user->update( $request->all() );
+        return (new UserResource( $user ));
     }
 
     /**
@@ -86,8 +86,7 @@ class UsersController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy( User $user )
     {
-        //
     }
 }

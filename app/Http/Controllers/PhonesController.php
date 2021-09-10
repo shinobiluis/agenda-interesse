@@ -6,7 +6,8 @@ use Illuminate\Http\Request;
 // importacion de Modelos
 use App\Models\Phone;
 // importamos las validaciones del request
-// use App\Http\Requests\UserRequest;
+use App\Http\Requests\PhonePostRequest;
+use App\Http\Requests\PhoneUpdateRequest;
 // importamos las apiResource
 use App\Http\Resources\PhoneResource; 
 class PhonesController extends Controller
@@ -26,7 +27,7 @@ class PhonesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PhonePostRequest $request)
     {
        return new PhoneResource( Phone::create( $request->all() ) );
     }
@@ -49,8 +50,10 @@ class PhonesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Phone $phone)
+    public function update( PhoneUpdateRequest $request, Phone $phone)
     {
+        $phone->update( $request->all() );
+        return (new PhoneResource( $phone ));
     }
 
     /**
@@ -59,8 +62,9 @@ class PhonesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy( Phone $phone )
     {
-        //
+        $phone->delete();
+        return ( new PhoneResource( $phone ) );
     }
 }

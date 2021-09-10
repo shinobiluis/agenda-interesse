@@ -1,7 +1,5 @@
-/* import 'sweetalert2/src/sweetalert2.scss' */
-
 .wrapperAddContact{
-    position: absolute;
+    position: fixed;
     bottom:0;
     width: 100%;
     text-align:center;
@@ -10,4 +8,11 @@
 .wrapperAddContact .btn{
     width: 50px;
     height: 50px;
+}
+.maxHeightTable{
+    height: 80vh;
+    overflow-y: scroll;
+}
+.btn i{
+    pointer-events: none;
 }

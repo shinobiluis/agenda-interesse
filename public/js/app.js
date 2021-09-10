@@ -2090,6 +2090,7 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js"); // import
 /****** variables ******/
 
 var btnAddContact = document.querySelector('#btnAddContact');
+var bodyTable = document.querySelector('#bodyTable');
 /****** Funciones ******/
 // agregar contacto
 
@@ -2126,6 +2127,7 @@ var agregarContacto = /*#__PURE__*/function () {
 
             if (respuesta.status == true) {
               notificacion('Bien...!', 'Registro correcto', 'success');
+              consultarContactos();
             } else {
               notificacion('Error...!', 'Uno o mas campos tienen error', 'error');
               notificarErrores(respuesta.errores);
@@ -2238,6 +2240,118 @@ var validarForm = function validarForm(form) {
   }
 
   return true;
+}; // metodos
+
+
+var consultarContactos = /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+    var response, data;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            _context3.next = 2;
+            return axios.get("http://agenda-interesse.kame.house/api/users");
+
+          case 2:
+            response = _context3.sent;
+            _context3.next = 5;
+            return response.data.data;
+
+          case 5:
+            data = _context3.sent;
+            crearFilas(data);
+
+          case 7:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3);
+  }));
+
+  return function consultarContactos() {
+    return _ref3.apply(this, arguments);
+  };
+}();
+
+var crearFilas = function crearFilas(data) {
+  var html = '';
+  data.forEach(function (valor, indice, array) {
+    html += "\n            <tr>\n                <td>".concat(indice + 1, "</td>\n                <td>").concat(data[indice].nombre, "</td>\n                <td>").concat(data[indice].email, "</td>\n                <td>").concat(data[indice].direccion.direccion, "</td>\n                <td>\n                    <div class=\"btn-group\" role=\"group\" aria-label=\"Basic mixed styles example\">\n                        <button type=\"button\" class=\"btnEliminar btn btn-danger\" data-id=\"").concat(data[indice].id, "\"><i class=\"fas fa-trash-alt\"></i></button>\n                        <button type=\"button\" class=\"btnVerTelefonos btn btn-warning\"><i class=\"fas fa-eye\"></i></button>\n                        <button type=\"button\" class=\"btnAgregarTelefono btn btn-success\"><i class=\"fas fa-plus-circle\"></i></button>\n                    </div>\n                </td>\n            </tr>\n        ");
+    bodyTable.innerHTML = html;
+    agregarEventosBotonesTabla();
+  });
+};
+
+var agregarEventosBotonesTabla = function agregarEventosBotonesTabla() {
+  // agregamos eventos a los botones
+  var btnEliminar = document.getElementsByClassName("btnEliminar");
+  var btnVerTelefonos = document.getElementsByClassName("btnVerTelefonos");
+  var btnAgregarTelefono = document.getElementsByClassName("btnAgregarTelefono");
+
+  for (var i = 0; i < btnEliminar.length; i++) {
+    btnEliminar[i].addEventListener('click', eliminarRegistro, false);
+  }
+
+  for (var i = 0; i < btnVerTelefonos.length; i++) {
+    btnVerTelefonos[i].addEventListener('click', verTelefonos, false);
+  }
+
+  for (var i = 0; i < btnAgregarTelefono.length; i++) {
+    btnAgregarTelefono[i].addEventListener('click', agregarTelefonos, false);
+  }
+};
+
+var eliminarRegistro = /*#__PURE__*/function () {
+  var _ref4 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4(e) {
+    var response, data;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
+          case 0:
+            _context4.next = 2;
+            return axios["delete"]("http://agenda-interesse.kame.house/api/users/".concat(e.target.dataset.id));
+
+          case 2:
+            response = _context4.sent;
+            _context4.next = 5;
+            return response.data;
+
+          case 5:
+            data = _context4.sent;
+            console.log(data);
+
+            if (data.status == true) {
+              sweetalert2__WEBPACK_IMPORTED_MODULE_1___default().fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Registro eliminado',
+                showConfirmButton: false,
+                timer: 1500
+              });
+              consultarContactos();
+            }
+
+          case 8:
+          case "end":
+            return _context4.stop();
+        }
+      }
+    }, _callee4);
+  }));
+
+  return function eliminarRegistro(_x2) {
+    return _ref4.apply(this, arguments);
+  };
+}();
+
+var verTelefonos = function verTelefonos(e) {
+  console.log("ver telefonos");
+};
+
+var agregarTelefonos = function agregarTelefonos(e) {
+  console.log("agregar Telefonos");
 };
 /****** AddEvents ******/
 
@@ -2247,7 +2361,9 @@ var addEventsListener = function addEventsListener() {
 }; // Iniciamos los eventos
 
 
-addEventsListener();
+addEventsListener(); // Consultamos los contactos de inicio
+
+consultarContactos();
 
 /***/ }),
 

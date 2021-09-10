@@ -3,6 +3,7 @@ require('./bootstrap');
 import Swal from 'sweetalert2';
 /****** variables ******/
 const btnAddContact = document.querySelector('#btnAddContact');
+const bodyTable = document.querySelector('#bodyTable');
 
 /****** Funciones ******/
 // agregar contacto
@@ -22,6 +23,7 @@ const agregarContacto = async () => {
         console.log( 'respuesta', respuesta )
         if( respuesta.status == true ){
             notificacion( 'Bien...!', 'Registro correcto', 'success' );
+            consultarContactos();
         }else{
             notificacion( 'Error...!', 'Uno o mas campos tienen error', 'error' );
             notificarErrores( respuesta.errores );
@@ -97,6 +99,73 @@ const validarForm = ( form ) => {
     return true;
 }
 
+
+// metodos
+const consultarContactos = async () =>{
+    const response = await axios.get("http://agenda-interesse.kame.house/api/users");
+    const data = await response.data.data;
+    crearFilas( data );
+}
+
+const crearFilas = ( data ) => {
+    let html = '';
+    data.forEach( function(valor, indice, array) {
+        html += `
+            <tr>
+                <td>${indice + 1}</td>
+                <td>${data[indice].nombre}</td>
+                <td>${data[indice].email}</td>
+                <td>${data[indice].direccion.direccion}</td>
+                <td>
+                    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
+                        <button type="button" class="btnEliminar btn btn-danger" data-id="${data[indice].id}"><i class="fas fa-trash-alt"></i></button>
+                        <button type="button" class="btnVerTelefonos btn btn-warning"><i class="fas fa-eye"></i></button>
+                        <button type="button" class="btnAgregarTelefono btn btn-success"><i class="fas fa-plus-circle"></i></button>
+                    </div>
+                </td>
+            </tr>
+        `
+        bodyTable.innerHTML = html;
+        agregarEventosBotonesTabla();
+    });
+}
+const agregarEventosBotonesTabla = () =>{
+    // agregamos eventos a los botones
+    var btnEliminar = document.getElementsByClassName("btnEliminar");
+    var btnVerTelefonos = document.getElementsByClassName("btnVerTelefonos");
+    var btnAgregarTelefono = document.getElementsByClassName("btnAgregarTelefono");
+    for (var i = 0; i < btnEliminar.length; i++) {
+        btnEliminar[i].addEventListener('click', eliminarRegistro, false);
+    }
+    for (var i = 0; i < btnVerTelefonos.length; i++) {
+        btnVerTelefonos[i].addEventListener('click', verTelefonos, false);
+    }
+    for (var i = 0; i < btnAgregarTelefono.length; i++) {
+        btnAgregarTelefono[i].addEventListener('click', agregarTelefonos, false);
+    }
+}
+const eliminarRegistro = async (e) => {
+    const response = await axios.delete(`http://agenda-interesse.kame.house/api/users/${e.target.dataset.id}`);
+    const data = await response.data;
+    console.log(data)
+    if( data.status == true ){
+        Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Registro eliminado',
+            showConfirmButton: false,
+            timer: 1500
+        })    
+        consultarContactos();
+    }
+}
+const verTelefonos = (e) => {
+    console.log( "ver telefonos" );
+}
+const agregarTelefonos = (e) => {
+    console.log( "agregar Telefonos" );
+}
+
 /****** AddEvents ******/
 const addEventsListener = () =>{
     btnAddContact.addEventListener("click", agregarContacto);
@@ -104,4 +173,5 @@ const addEventsListener = () =>{
 // Iniciamos los eventos
 addEventsListener();
 
-
+// Consultamos los contactos de inicio
+consultarContactos();

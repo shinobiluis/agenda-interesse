@@ -2091,6 +2091,7 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js"); // import
 
 var btnAddContact = document.querySelector('#btnAddContact');
 var bodyTable = document.querySelector('#bodyTable');
+var telefonosContacto = document.querySelector('#telefonosContacto');
 /****** Funciones ******/
 // agregar contacto
 
@@ -2260,7 +2261,12 @@ var consultarContactos = /*#__PURE__*/function () {
 
           case 5:
             data = _context3.sent;
-            crearFilas(data);
+
+            if (data.length == 0) {
+              bodyTable.innerHTML = '';
+            } else {
+              crearFilas(data);
+            }
 
           case 7:
           case "end":
@@ -2278,7 +2284,7 @@ var consultarContactos = /*#__PURE__*/function () {
 var crearFilas = function crearFilas(data) {
   var html = '';
   data.forEach(function (valor, indice, array) {
-    html += "\n            <tr>\n                <td>".concat(indice + 1, "</td>\n                <td>").concat(data[indice].nombre, "</td>\n                <td>").concat(data[indice].email, "</td>\n                <td>").concat(data[indice].direccion.direccion, "</td>\n                <td>\n                    <div class=\"btn-group\" role=\"group\" aria-label=\"Basic mixed styles example\">\n                        <button type=\"button\" class=\"btnEliminar btn btn-danger\" data-id=\"").concat(data[indice].id, "\"><i class=\"fas fa-trash-alt\"></i></button>\n                        <button type=\"button\" class=\"btnVerTelefonos btn btn-warning\"><i class=\"fas fa-eye\"></i></button>\n                        <button type=\"button\" class=\"btnAgregarTelefono btn btn-success\"><i class=\"fas fa-plus-circle\"></i></button>\n                    </div>\n                </td>\n            </tr>\n        ");
+    html += "\n            <tr>\n                <td>".concat(indice + 1, "</td>\n                <td>").concat(data[indice].nombre, "</td>\n                <td>").concat(data[indice].email, "</td>\n                <td>").concat(data[indice].direccion.direccion, "</td>\n                <td>\n                    <div class=\"btn-group\" role=\"group\" aria-label=\"Basic mixed styles example\">\n                        <button type=\"button\" class=\"btnEliminar btn btn-danger\" data-id=\"").concat(data[indice].id, "\"><i class=\"fas fa-trash-alt\"></i></button>\n                        <button type=\"button\" class=\"btnVerTelefonos btn btn-warning\" data-id=\"").concat(data[indice].id, "\" data-bs-toggle=\"modal\" data-bs-target=\"#verTelefonos\">\n                        <i class=\"fas fa-eye\"></i></button>\n                        <button type=\"button\" class=\"btnAgregarTelefono btn btn-success\" data-id=\"").concat(data[indice].id, "\"><i class=\"fas fa-plus-circle\"></i></button>\n                    </div>\n                </td>\n            </tr>\n        ");
     bodyTable.innerHTML = html;
     agregarEventosBotonesTabla();
   });
@@ -2320,7 +2326,6 @@ var eliminarRegistro = /*#__PURE__*/function () {
 
           case 5:
             data = _context4.sent;
-            console.log(data);
 
             if (data.status == true) {
               sweetalert2__WEBPACK_IMPORTED_MODULE_1___default().fire({
@@ -2333,7 +2338,7 @@ var eliminarRegistro = /*#__PURE__*/function () {
               consultarContactos();
             }
 
-          case 8:
+          case 7:
           case "end":
             return _context4.stop();
         }
@@ -2346,9 +2351,44 @@ var eliminarRegistro = /*#__PURE__*/function () {
   };
 }();
 
-var verTelefonos = function verTelefonos(e) {
-  console.log("ver telefonos");
-};
+var verTelefonos = /*#__PURE__*/function () {
+  var _ref5 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5(e) {
+    var response, data, html;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
+      while (1) {
+        switch (_context5.prev = _context5.next) {
+          case 0:
+            _context5.next = 2;
+            return axios.get("http://agenda-interesse.kame.house/api/users/".concat(e.target.dataset.id));
+
+          case 2:
+            response = _context5.sent;
+            _context5.next = 5;
+            return response.data.data.telefonos;
+
+          case 5:
+            data = _context5.sent;
+            console.log(data); // pintamos los telefonos en la vista
+
+            html = '<ul class="list-group">';
+            data.forEach(function (valor, indice, array) {
+              html += "\n        <li class=\"list-group-item\">".concat(data[indice].alias_numero, ": ").concat(data[indice].numero, "</li>\n        ");
+            });
+            html += '</ul>';
+            telefonosContacto.innerHTML = html;
+
+          case 11:
+          case "end":
+            return _context5.stop();
+        }
+      }
+    }, _callee5);
+  }));
+
+  return function verTelefonos(_x3) {
+    return _ref5.apply(this, arguments);
+  };
+}();
 
 var agregarTelefonos = function agregarTelefonos(e) {
   console.log("agregar Telefonos");

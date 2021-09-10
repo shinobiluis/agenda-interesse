@@ -4,6 +4,7 @@ import Swal from 'sweetalert2';
 /****** variables ******/
 const btnAddContact = document.querySelector('#btnAddContact');
 const bodyTable = document.querySelector('#bodyTable');
+const telefonosContacto = document.querySelector('#telefonosContacto');
 
 /****** Funciones ******/
 // agregar contacto
@@ -104,7 +105,11 @@ const validarForm = ( form ) => {
 const consultarContactos = async () =>{
     const response = await axios.get("http://agenda-interesse.kame.house/api/users");
     const data = await response.data.data;
-    crearFilas( data );
+    if( data.length == 0 ){
+        bodyTable.innerHTML = '';
+    }else{
+        crearFilas( data );
+    }
 }
 
 const crearFilas = ( data ) => {
@@ -119,8 +124,9 @@ const crearFilas = ( data ) => {
                 <td>
                     <div class="btn-group" role="group" aria-label="Basic mixed styles example">
                         <button type="button" class="btnEliminar btn btn-danger" data-id="${data[indice].id}"><i class="fas fa-trash-alt"></i></button>
-                        <button type="button" class="btnVerTelefonos btn btn-warning"><i class="fas fa-eye"></i></button>
-                        <button type="button" class="btnAgregarTelefono btn btn-success"><i class="fas fa-plus-circle"></i></button>
+                        <button type="button" class="btnVerTelefonos btn btn-warning" data-id="${data[indice].id}" data-bs-toggle="modal" data-bs-target="#verTelefonos">
+                        <i class="fas fa-eye"></i></button>
+                        <button type="button" class="btnAgregarTelefono btn btn-success" data-id="${data[indice].id}"><i class="fas fa-plus-circle"></i></button>
                     </div>
                 </td>
             </tr>
@@ -147,7 +153,6 @@ const agregarEventosBotonesTabla = () =>{
 const eliminarRegistro = async (e) => {
     const response = await axios.delete(`http://agenda-interesse.kame.house/api/users/${e.target.dataset.id}`);
     const data = await response.data;
-    console.log(data)
     if( data.status == true ){
         Swal.fire({
             position: 'top-end',
@@ -159,8 +164,20 @@ const eliminarRegistro = async (e) => {
         consultarContactos();
     }
 }
-const verTelefonos = (e) => {
-    console.log( "ver telefonos" );
+const verTelefonos = async (e) => {
+    // http://agenda-interesse.kame.house/api/users/11
+    const response = await axios.get(`http://agenda-interesse.kame.house/api/users/${e.target.dataset.id}`);
+    const data = await response.data.data.telefonos;
+    console.log(data)
+    // pintamos los telefonos en la vista
+    let html = '<ul class="list-group">';
+    data.forEach( function(valor, indice, array) {
+        html += `
+        <li class="list-group-item">${data[indice].alias_numero}: ${data[indice].numero}</li>
+        `
+    });
+    html += '</ul>';
+    telefonosContacto.innerHTML = html;
 }
 const agregarTelefonos = (e) => {
     console.log( "agregar Telefonos" );

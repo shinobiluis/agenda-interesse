@@ -88,5 +88,21 @@ class UsersController extends Controller
      */
     public function destroy( User $user )
     {
+        DB::beginTransaction();
+        try {
+            // insertamos en tablas
+            DB::table('phones')->where('user_id', '=', $user->id)->delete();
+            DB::table('addresses')->where('user_id', '=', $user->id)->delete();
+            DB::table('users')->where('id', '=', $user->id)->delete();
+            // hacemos el commit
+            DB::commit();
+        } catch ( Throwable $e) {
+            DB::rollback();
+            return response()->json([
+                'status' => 'false',
+                'mensaje' => 'El registro fallo, no se inserto la información'
+            ]);
+        }
+        return (new UserResource( $user ));
     }
 }

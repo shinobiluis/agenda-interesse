@@ -22,4 +22,9 @@ class PhoneResource extends JsonResource
             'actualizado' => $this->updated_at->format('y-m-d'),
         ];
     }
+    public function with( $request ){
+        return [
+            'status' => true
+        ];
+    }
 }

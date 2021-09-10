@@ -5,6 +5,7 @@ import Swal from 'sweetalert2';
 const btnAddContact = document.querySelector('#btnAddContact');
 const bodyTable = document.querySelector('#bodyTable');
 const telefonosContacto = document.querySelector('#telefonosContacto');
+const btnAddNumber = document.querySelector('#btnAddNumber');
 
 /****** Funciones ******/
 // agregar contacto
@@ -31,6 +32,29 @@ const agregarContacto = async () => {
         }
     }
 }
+// agregar numero a usuario
+const agregarNumero = async () => {
+    const form = crearFormularioNumero();
+
+    limpiarErrores( form );
+    // reutilizamos el metodo para validar formulario
+    const validar = validarForm( form );
+    console.log( form );
+    // si la validacion es false notificamos el error
+    if( validar == false ){
+        notificacion( 'Error...!', 'Uno o mas campos estan vacios.....', 'error' );
+    }else{
+        // en caso de que no existan campos vacios realizamos la peticion
+        const respuesta = await enviarNumero( form );
+        console.log( 'respuesta', respuesta )
+        if( respuesta.status == true ){
+            notificacion( 'Bien...!', 'Registro correcto', 'success' );
+        }else{
+            notificacion( 'Error...!', 'Uno o mas campos tienen error', 'error' );
+            notificarErroresTelefono( respuesta.errores );
+        }
+    }
+}
 // Metodo para enviar informacion
 const enviar = async ( form ) => {
     try{
@@ -39,6 +63,21 @@ const enviar = async ( form ) => {
         // limpiiamos el formulario y cerramos la modal
         document.getElementById("formAddContact").reset();
         document.getElementById('btnCloseModal').click();
+        return data;
+    }catch (err) {
+        // en caso de retornar un 422 de validacion del formulario
+        // console.log(err.response.data)
+        return err.response.data;
+    }
+}
+// Metodo para enviar el formulario de numero
+const enviarNumero = async ( form ) => {
+    try{
+        const response = await axios.post("http://agenda-interesse.kame.house/api/phones", form);
+        const data = await response.data;
+        // limpiiamos el formulario y cerramos la modal
+        // document.getElementById("formAddContact").reset();
+        // document.getElementById('btnCloseModal').click();
         return data;
     }catch (err) {
         // en caso de retornar un 422 de validacion del formulario
@@ -56,6 +95,16 @@ const notificarErrores = ( errores ) => {
         document.querySelector(elementoError).innerHTML =errores[clave][0];
     }
 }
+// metodo para notificar errores en el formulario al agregar un telefono
+const notificarErroresTelefono = ( errores ) => {
+    for (let clave in errores){
+        const elemento = `#${clave}-add`; 
+        const elementoError = `#${clave}-validate-add`;
+        document.querySelector(elemento).classList.add('is-invalid');
+        document.querySelector(elementoError).innerHTML =errores[clave][0];
+    }
+}
+
 
 // metodo para limpiarErrores del fomulario 
 const limpiarErrores = ( form ) => {
@@ -75,6 +124,15 @@ const crearFormulario = () => {
         'alias_direction':document.querySelector('#alias_direction').value.trim(),
         'direction':document.querySelector('#direction').value.trim(),
         'postal_code':document.querySelector('#postal_code').value.trim()
+    }
+    return form;
+}
+// Metodo para crear la informacion del formulario para agregar numeros
+const crearFormularioNumero = () => {
+    const form = {
+        'alias_number':document.querySelector('#alias_number-add').value.trim(),
+        'number':document.querySelector('#number-add').value.trim(),
+        'user_id':document.querySelector('#user_id').value.trim()
     }
     return form;
 }
@@ -126,7 +184,7 @@ const crearFilas = ( data ) => {
                         <button type="button" class="btnEliminar btn btn-danger" data-id="${data[indice].id}"><i class="fas fa-trash-alt"></i></button>
                         <button type="button" class="btnVerTelefonos btn btn-warning" data-id="${data[indice].id}" data-bs-toggle="modal" data-bs-target="#verTelefonos">
                         <i class="fas fa-eye"></i></button>
-                        <button type="button" class="btnAgregarTelefono btn btn-success" data-id="${data[indice].id}"><i class="fas fa-plus-circle"></i></button>
+                        <button type="button" class="btnAgregarTelefono btn btn-success" data-id="${data[indice].id}" data-bs-toggle="modal" data-bs-target="#agregarTelefonos"><i class="fas fa-plus-circle"></i></button>
                     </div>
                 </td>
             </tr>
@@ -180,12 +238,13 @@ const verTelefonos = async (e) => {
     telefonosContacto.innerHTML = html;
 }
 const agregarTelefonos = (e) => {
-    console.log( "agregar Telefonos" );
+    document.querySelector('#user_id').value = e.target.dataset.id;
 }
 
 /****** AddEvents ******/
 const addEventsListener = () =>{
     btnAddContact.addEventListener("click", agregarContacto);
+    btnAddNumber.addEventListener("click", agregarNumero);
 }
 // Iniciamos los eventos
 addEventsListener();

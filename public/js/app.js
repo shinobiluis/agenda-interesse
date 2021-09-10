@@ -2092,6 +2092,7 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js"); // import
 var btnAddContact = document.querySelector('#btnAddContact');
 var bodyTable = document.querySelector('#bodyTable');
 var telefonosContacto = document.querySelector('#telefonosContacto');
+var btnAddNumber = document.querySelector('#btnAddNumber');
 /****** Funciones ******/
 // agregar contacto
 
@@ -2145,47 +2146,137 @@ var agregarContacto = /*#__PURE__*/function () {
   return function agregarContacto() {
     return _ref.apply(this, arguments);
   };
-}(); // Metodo para enviar informacion
+}(); // agregar numero a usuario
 
 
-var enviar = /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2(form) {
-    var response, data;
+var agregarNumero = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee2() {
+    var form, validar, respuesta;
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
-            _context2.prev = 0;
-            _context2.next = 3;
-            return axios.post("http://agenda-interesse.kame.house/api/users", form);
+            form = crearFormularioNumero();
+            limpiarErrores(form); // reutilizamos el metodo para validar formulario
 
-          case 3:
-            response = _context2.sent;
-            _context2.next = 6;
-            return response.data;
+            validar = validarForm(form);
+            console.log(form); // si la validacion es false notificamos el error
 
-          case 6:
-            data = _context2.sent;
-            // limpiiamos el formulario y cerramos la modal
-            document.getElementById("formAddContact").reset();
-            document.getElementById('btnCloseModal').click();
-            return _context2.abrupt("return", data);
+            if (!(validar == false)) {
+              _context2.next = 8;
+              break;
+            }
 
-          case 12:
-            _context2.prev = 12;
-            _context2.t0 = _context2["catch"](0);
-            return _context2.abrupt("return", _context2.t0.response.data);
+            notificacion('Error...!', 'Uno o mas campos estan vacios.....', 'error');
+            _context2.next = 13;
+            break;
 
-          case 15:
+          case 8:
+            _context2.next = 10;
+            return enviarNumero(form);
+
+          case 10:
+            respuesta = _context2.sent;
+            console.log('respuesta', respuesta);
+
+            if (respuesta.status == true) {
+              notificacion('Bien...!', 'Registro correcto', 'success');
+            } else {
+              notificacion('Error...!', 'Uno o mas campos tienen error', 'error');
+              notificarErroresTelefono(respuesta.errores);
+            }
+
+          case 13:
           case "end":
             return _context2.stop();
         }
       }
-    }, _callee2, null, [[0, 12]]);
+    }, _callee2);
+  }));
+
+  return function agregarNumero() {
+    return _ref2.apply(this, arguments);
+  };
+}(); // Metodo para enviar informacion
+
+
+var enviar = /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3(form) {
+    var response, data;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+      while (1) {
+        switch (_context3.prev = _context3.next) {
+          case 0:
+            _context3.prev = 0;
+            _context3.next = 3;
+            return axios.post("http://agenda-interesse.kame.house/api/users", form);
+
+          case 3:
+            response = _context3.sent;
+            _context3.next = 6;
+            return response.data;
+
+          case 6:
+            data = _context3.sent;
+            // limpiiamos el formulario y cerramos la modal
+            document.getElementById("formAddContact").reset();
+            document.getElementById('btnCloseModal').click();
+            return _context3.abrupt("return", data);
+
+          case 12:
+            _context3.prev = 12;
+            _context3.t0 = _context3["catch"](0);
+            return _context3.abrupt("return", _context3.t0.response.data);
+
+          case 15:
+          case "end":
+            return _context3.stop();
+        }
+      }
+    }, _callee3, null, [[0, 12]]);
   }));
 
   return function enviar(_x) {
-    return _ref2.apply(this, arguments);
+    return _ref3.apply(this, arguments);
+  };
+}(); // Metodo para enviar el formulario de numero
+
+
+var enviarNumero = /*#__PURE__*/function () {
+  var _ref4 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4(form) {
+    var response, data;
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
+      while (1) {
+        switch (_context4.prev = _context4.next) {
+          case 0:
+            _context4.prev = 0;
+            _context4.next = 3;
+            return axios.post("http://agenda-interesse.kame.house/api/phones", form);
+
+          case 3:
+            response = _context4.sent;
+            _context4.next = 6;
+            return response.data;
+
+          case 6:
+            data = _context4.sent;
+            return _context4.abrupt("return", data);
+
+          case 10:
+            _context4.prev = 10;
+            _context4.t0 = _context4["catch"](0);
+            return _context4.abrupt("return", _context4.t0.response.data);
+
+          case 13:
+          case "end":
+            return _context4.stop();
+        }
+      }
+    }, _callee4, null, [[0, 10]]);
+  }));
+
+  return function enviarNumero(_x2) {
+    return _ref4.apply(this, arguments);
   };
 }(); // metodo para notificar errores en el formulario
 
@@ -2194,6 +2285,16 @@ var notificarErrores = function notificarErrores(errores) {
   for (var clave in errores) {
     var elemento = "#".concat(clave);
     var elementoError = "#".concat(clave, "-validate");
+    document.querySelector(elemento).classList.add('is-invalid');
+    document.querySelector(elementoError).innerHTML = errores[clave][0];
+  }
+}; // metodo para notificar errores en el formulario al agregar un telefono
+
+
+var notificarErroresTelefono = function notificarErroresTelefono(errores) {
+  for (var clave in errores) {
+    var elemento = "#".concat(clave, "-add");
+    var elementoError = "#".concat(clave, "-validate-add");
     document.querySelector(elemento).classList.add('is-invalid');
     document.querySelector(elementoError).innerHTML = errores[clave][0];
   }
@@ -2217,6 +2318,16 @@ var crearFormulario = function crearFormulario() {
     'alias_direction': document.querySelector('#alias_direction').value.trim(),
     'direction': document.querySelector('#direction').value.trim(),
     'postal_code': document.querySelector('#postal_code').value.trim()
+  };
+  return form;
+}; // Metodo para crear la informacion del formulario para agregar numeros
+
+
+var crearFormularioNumero = function crearFormularioNumero() {
+  var form = {
+    'alias_number': document.querySelector('#alias_number-add').value.trim(),
+    'number': document.querySelector('#number-add').value.trim(),
+    'user_id': document.querySelector('#user_id').value.trim()
   };
   return form;
 }; // metodo de swall
@@ -2245,22 +2356,22 @@ var validarForm = function validarForm(form) {
 
 
 var consultarContactos = /*#__PURE__*/function () {
-  var _ref3 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee3() {
+  var _ref5 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5() {
     var response, data;
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee3$(_context3) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
       while (1) {
-        switch (_context3.prev = _context3.next) {
+        switch (_context5.prev = _context5.next) {
           case 0:
-            _context3.next = 2;
+            _context5.next = 2;
             return axios.get("http://agenda-interesse.kame.house/api/users");
 
           case 2:
-            response = _context3.sent;
-            _context3.next = 5;
+            response = _context5.sent;
+            _context5.next = 5;
             return response.data.data;
 
           case 5:
-            data = _context3.sent;
+            data = _context5.sent;
 
             if (data.length == 0) {
               bodyTable.innerHTML = '';
@@ -2270,21 +2381,21 @@ var consultarContactos = /*#__PURE__*/function () {
 
           case 7:
           case "end":
-            return _context3.stop();
+            return _context5.stop();
         }
       }
-    }, _callee3);
+    }, _callee5);
   }));
 
   return function consultarContactos() {
-    return _ref3.apply(this, arguments);
+    return _ref5.apply(this, arguments);
   };
 }();
 
 var crearFilas = function crearFilas(data) {
   var html = '';
   data.forEach(function (valor, indice, array) {
-    html += "\n            <tr>\n                <td>".concat(indice + 1, "</td>\n                <td>").concat(data[indice].nombre, "</td>\n                <td>").concat(data[indice].email, "</td>\n                <td>").concat(data[indice].direccion.direccion, "</td>\n                <td>\n                    <div class=\"btn-group\" role=\"group\" aria-label=\"Basic mixed styles example\">\n                        <button type=\"button\" class=\"btnEliminar btn btn-danger\" data-id=\"").concat(data[indice].id, "\"><i class=\"fas fa-trash-alt\"></i></button>\n                        <button type=\"button\" class=\"btnVerTelefonos btn btn-warning\" data-id=\"").concat(data[indice].id, "\" data-bs-toggle=\"modal\" data-bs-target=\"#verTelefonos\">\n                        <i class=\"fas fa-eye\"></i></button>\n                        <button type=\"button\" class=\"btnAgregarTelefono btn btn-success\" data-id=\"").concat(data[indice].id, "\"><i class=\"fas fa-plus-circle\"></i></button>\n                    </div>\n                </td>\n            </tr>\n        ");
+    html += "\n            <tr>\n                <td>".concat(indice + 1, "</td>\n                <td>").concat(data[indice].nombre, "</td>\n                <td>").concat(data[indice].email, "</td>\n                <td>").concat(data[indice].direccion.direccion, "</td>\n                <td>\n                    <div class=\"btn-group\" role=\"group\" aria-label=\"Basic mixed styles example\">\n                        <button type=\"button\" class=\"btnEliminar btn btn-danger\" data-id=\"").concat(data[indice].id, "\"><i class=\"fas fa-trash-alt\"></i></button>\n                        <button type=\"button\" class=\"btnVerTelefonos btn btn-warning\" data-id=\"").concat(data[indice].id, "\" data-bs-toggle=\"modal\" data-bs-target=\"#verTelefonos\">\n                        <i class=\"fas fa-eye\"></i></button>\n                        <button type=\"button\" class=\"btnAgregarTelefono btn btn-success\" data-id=\"").concat(data[indice].id, "\" data-bs-toggle=\"modal\" data-bs-target=\"#agregarTelefonos\"><i class=\"fas fa-plus-circle\"></i></button>\n                    </div>\n                </td>\n            </tr>\n        ");
     bodyTable.innerHTML = html;
     agregarEventosBotonesTabla();
   });
@@ -2310,22 +2421,22 @@ var agregarEventosBotonesTabla = function agregarEventosBotonesTabla() {
 };
 
 var eliminarRegistro = /*#__PURE__*/function () {
-  var _ref4 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee4(e) {
+  var _ref6 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee6(e) {
     var response, data;
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee4$(_context4) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee6$(_context6) {
       while (1) {
-        switch (_context4.prev = _context4.next) {
+        switch (_context6.prev = _context6.next) {
           case 0:
-            _context4.next = 2;
+            _context6.next = 2;
             return axios["delete"]("http://agenda-interesse.kame.house/api/users/".concat(e.target.dataset.id));
 
           case 2:
-            response = _context4.sent;
-            _context4.next = 5;
+            response = _context6.sent;
+            _context6.next = 5;
             return response.data;
 
           case 5:
-            data = _context4.sent;
+            data = _context6.sent;
 
             if (data.status == true) {
               sweetalert2__WEBPACK_IMPORTED_MODULE_1___default().fire({
@@ -2340,34 +2451,34 @@ var eliminarRegistro = /*#__PURE__*/function () {
 
           case 7:
           case "end":
-            return _context4.stop();
+            return _context6.stop();
         }
       }
-    }, _callee4);
+    }, _callee6);
   }));
 
-  return function eliminarRegistro(_x2) {
-    return _ref4.apply(this, arguments);
+  return function eliminarRegistro(_x3) {
+    return _ref6.apply(this, arguments);
   };
 }();
 
 var verTelefonos = /*#__PURE__*/function () {
-  var _ref5 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee5(e) {
+  var _ref7 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().mark(function _callee7(e) {
     var response, data, html;
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee5$(_context5) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default().wrap(function _callee7$(_context7) {
       while (1) {
-        switch (_context5.prev = _context5.next) {
+        switch (_context7.prev = _context7.next) {
           case 0:
-            _context5.next = 2;
+            _context7.next = 2;
             return axios.get("http://agenda-interesse.kame.house/api/users/".concat(e.target.dataset.id));
 
           case 2:
-            response = _context5.sent;
-            _context5.next = 5;
+            response = _context7.sent;
+            _context7.next = 5;
             return response.data.data.telefonos;
 
           case 5:
-            data = _context5.sent;
+            data = _context7.sent;
             console.log(data); // pintamos los telefonos en la vista
 
             html = '<ul class="list-group">';
@@ -2379,25 +2490,26 @@ var verTelefonos = /*#__PURE__*/function () {
 
           case 11:
           case "end":
-            return _context5.stop();
+            return _context7.stop();
         }
       }
-    }, _callee5);
+    }, _callee7);
   }));
 
-  return function verTelefonos(_x3) {
-    return _ref5.apply(this, arguments);
+  return function verTelefonos(_x4) {
+    return _ref7.apply(this, arguments);
   };
 }();
 
 var agregarTelefonos = function agregarTelefonos(e) {
-  console.log("agregar Telefonos");
+  document.querySelector('#user_id').value = e.target.dataset.id;
 };
 /****** AddEvents ******/
 
 
 var addEventsListener = function addEventsListener() {
   btnAddContact.addEventListener("click", agregarContacto);
+  btnAddNumber.addEventListener("click", agregarNumero);
 }; // Iniciamos los eventos
 
 

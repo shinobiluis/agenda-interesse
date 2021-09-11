@@ -82,6 +82,7 @@ const eliminarRegistro = async (e) => {
     }
 }
 const verTelefonos = async (e) => {
+    telefonosContacto.innerHTML = '';
     // http://agenda-interesse.kame.house/api/users/11
     const response = await axios.get(`http://agenda-interesse.kame.house/api/users/${e.target.dataset.id}`);
     const data = await response.data.data.telefonos;
@@ -90,16 +91,51 @@ const verTelefonos = async (e) => {
     let html = '<ul class="list-group">';
     data.forEach( function(valor, indice, array) {
         html += `
-        <li class="list-group-item">${data[indice].alias_numero}: ${data[indice].numero}</li>
+        <li class="list-group-item">
+            <div class="row">
+                <div class="col-10">
+                    ${data[indice].alias_numero}: ${data[indice].numero}
+                </div>
+                <div class="col-2">
+                    <button type="button" class="btn btn-danger rounded-circle btnRemoveNumber" data-id="${data[indice].id}">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                </div>
+            </div>
+        </li>
         `
     });
     html += '</ul>';
     telefonosContacto.innerHTML = html;
+    agregarEventosBotonesNumero();
+}
+
+const agregarEventosBotonesNumero = () =>{
+    // agregamos eventos a los botones
+    var btnRemoveNumber = document.getElementsByClassName("btnRemoveNumber");
+    for (var i = 0; i < btnRemoveNumber.length; i++) {
+        btnRemoveNumber[i].addEventListener('click', eliminarNumero, false);
+    }
 }
 const agregarTelefonos = (e) => {
     document.querySelector('#user_id').value = e.target.dataset.id;
 }
 
+const eliminarNumero = async (e) => {
+    // console.log(e.target.dataset.id)
+    const response = await axios.delete(`http://agenda-interesse.kame.house/api/phones/${e.target.dataset.id}`);
+    const data = await response.data;
+    if( data.status == true ){
+        Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Registro eliminado',
+            showConfirmButton: false,
+            timer: 1500
+        })    
+       e.target.parentNode.parentNode.parentNode.remove()
+    }
+}
 
 // agregar numero a usuario
 const agregarNumero = async () => {
@@ -150,10 +186,6 @@ const crearFormularioNumero = () => {
     }
     return form;
 }
-
-
-
-
 
 /****** AddEvents ******/
 const addEventsListener = () =>{

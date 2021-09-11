@@ -1,4 +1,14 @@
 import Swal from 'sweetalert2';
+import { 
+    limpiarErrores, 
+    notificarErrores, 
+    notificarErroresTelefono 
+} from './errores.js'
+import { validarForm } from './validarForm.js';
+import { notificacion } from './notificacion.js';
+const bodyTable = document.querySelector('#bodyTable');
+const telefonosContacto = document.querySelector('#telefonosContacto');
+const btnAddNumber = document.querySelector('#btnAddNumber');
 // metodos
 export const consultarContactos = async () =>{
     const response = await axios.get("http://agenda-interesse.kame.house/api/users");
@@ -20,11 +30,16 @@ const crearFilas = ( data ) => {
                 <td>${data[indice].email}</td>
                 <td>${data[indice].direccion.direccion}</td>
                 <td>
-                    <div class="btn-group" role="group" aria-label="Basic mixed styles example">
-                        <button type="button" class="btnEliminar btn btn-danger" data-id="${data[indice].id}"><i class="fas fa-trash-alt"></i></button>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btnEliminar btn btn-danger" data-id="${data[indice].id}">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
                         <button type="button" class="btnVerTelefonos btn btn-warning" data-id="${data[indice].id}" data-bs-toggle="modal" data-bs-target="#verTelefonos">
-                        <i class="fas fa-eye"></i></button>
-                        <button type="button" class="btnAgregarTelefono btn btn-success" data-id="${data[indice].id}" data-bs-toggle="modal" data-bs-target="#agregarTelefonos"><i class="fas fa-plus-circle"></i></button>
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button type="button" class="btnAgregarTelefono btn btn-success" data-id="${data[indice].id}" data-bs-toggle="modal" data-bs-target="#agregarTelefonos">
+                            <i class="fas fa-plus-circle"></i>
+                        </button>
                     </div>
                 </td>
             </tr>
@@ -84,3 +99,65 @@ const verTelefonos = async (e) => {
 const agregarTelefonos = (e) => {
     document.querySelector('#user_id').value = e.target.dataset.id;
 }
+
+
+// agregar numero a usuario
+const agregarNumero = async () => {
+    const form = crearFormularioNumero();
+    limpiarErrores( form );
+    // reutilizamos el metodo para validar formulario
+    const validar = validarForm( form );
+    console.log( form );
+    // si la validacion es false notificamos el error
+    if( validar == false ){
+        notificacion( 'Error...!', 'Uno o mas campos estan vacios.....', 'error' );
+    }else{
+        // en caso de que no existan campos vacios realizamos la peticion
+        const respuesta = await enviarNumero( form );
+        console.log( 'respuesta', respuesta )
+        if( respuesta.status == true ){
+            notificacion( 'Bien...!', 'Registro correcto', 'success' );
+        }else{
+            notificacion( 'Error...!', 'Uno o mas campos tienen error', 'error' );
+            notificarErroresTelefono( respuesta.errores );
+        }
+    }
+}
+
+
+// Metodo para enviar el formulario de numero
+const enviarNumero = async ( form ) => {
+    try{
+        const response = await axios.post("http://agenda-interesse.kame.house/api/phones", form);
+        const data = await response.data;
+        // limpiiamos el formulario y cerramos la modal
+        document.getElementById("agregarTelefono").reset();
+        document.querySelector('#btnCloseModalNumber').click();
+        return data;
+    }catch (err) {
+        // en caso de retornar un 422 de validacion del formulario
+        // console.log(err.response.data)
+        return err.response.data;
+    }
+}
+
+// Metodo para crear la informacion del formulario para agregar numeros
+const crearFormularioNumero = () => {
+    const form = {
+        'alias_number':document.querySelector('#alias_number-add').value.trim(),
+        'number':document.querySelector('#number-add').value.trim(),
+        'user_id':document.querySelector('#user_id').value.trim()
+    }
+    return form;
+}
+
+
+
+
+
+/****** AddEvents ******/
+const addEventsListener = () =>{
+    btnAddNumber.addEventListener("click", agregarNumero);
+}
+// Iniciamos los eventos
+addEventsListener();

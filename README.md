@@ -9,7 +9,7 @@
 
 # Vista previa
 
-<p align="center"><img src="./ImageReadme/imagenMuestra.png"  width="600"></p>
+<p align="center"><img src="./imageReadme/imagenMuestra.png"  width="800"></p>
 
 ## Configuración inicial
 

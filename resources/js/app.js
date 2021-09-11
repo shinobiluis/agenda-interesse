@@ -1,9 +1,10 @@
 require('./bootstrap');
 /******* Importaciones *******/
+
 // Importamos Swal para usar las notificaciones
 import Swal from 'sweetalert2';
-// se importa el metodo encargado del funcionamiento de la consuta de contactos
-// import { consultarContactos } from './consultarContactos.js';
+
+// Se importan metodos que se utilizan
 import { 
     limpiarErrores, 
     notificarErrores, 
@@ -12,8 +13,9 @@ import {
 } from './errores.js';
 import { validarForm } from './validarForm.js';
 import { notificacion } from './notificacion.js';
+
 /****** variables ******/
-// Este boton abre la modal principal para agregar contactos
+// Se crean variables que seran usadas mas adelante. 
 const btnAddContact = document.querySelector('#btnAddContact');
 const bodyTable = document.querySelector('#bodyTable');
 const telefonosContacto = document.querySelector('#telefonosContacto');
@@ -21,7 +23,7 @@ const btnAddNumber = document.querySelector('#btnAddNumber');
 const btnEditUser = document.querySelector('#btnEditUser');
 
 /****** Funciones ******/
-// agregar contacto
+// Este metodo se encarga de crear un nuevo contacto
 const agregarContacto = async () => {
     // creamos el formulario
     const form = crearFormulario();
@@ -34,23 +36,30 @@ const agregarContacto = async () => {
         notificacion( 'Error...!', 'Uno o mas campos estan vacios', 'error' );
     }else{
         // en caso de que no existan campos vacios realizamos la peticion
-        const respuesta = await enviar( form );
+        const respuesta = await crearContacto( form );
         if( respuesta.status == true ){
+            // este metodo solo pasa datos al swal para notificar.
             notificacion( 'Bien...!', 'Registro correcto', 'success' );
+            // Recargamos la tabla de contactos
             consultarContactos();
         }else{
+            // este metodo solo pasa datos al swall para notificar.
             notificacion( 'Error...!', 'Uno o mas campos tienen error', 'error' );
+            // este metodo activa los errores en el formulario y sele pasa el
+            // arreglo de errores que retorna el servicio con codigo 422
             notificarErrores( respuesta.errores );
         }
     }
 }
-// Metodo para enviar informacion
-const enviar = async ( form ) => {
+// Metodo para enviar informacion al servicio y generar el contacto
+const crearContacto = async ( form ) => {
     try{
-        const response = await axios.post("http://agenda-interesse.kame.house/api/users", form);
+        // se realiza peticion con axios
+        const response = await axios.post("/api/users", form);
         const data = await response.data;
         // limpiiamos el formulario y cerramos la modal
         document.getElementById("formAddContact").reset();
+        // cerramos la modal dando click al boton de cierre de modal.
         document.getElementById('btnCloseModal').click();
         return data;
     }catch (err) {
@@ -73,20 +82,21 @@ const crearFormulario = () => {
     return form;
 }
 
-
-/**********/
-
-// metodos
+// este metodo consulta todos los contactos y en caso de no encontrar
+// datos solo limpia la tabla, en caso de encontrar datos creara las filas
 const consultarContactos = async () =>{
-    const response = await axios.get("http://agenda-interesse.kame.house/api/users");
+    const response = await axios.get("/api/users");
     const data = await response.data.data;
     if( data.length == 0 ){
+        // limpiamos la tabla
         bodyTable.innerHTML = '';
     }else{
+        // creamos la filas de la tabla
         crearFilas( data );
     }
 }
-
+// este metodo recibe un array con todos los valos que requiere para
+// pintar la informacion.
 const crearFilas = ( data ) => {
     let html = '';
     data.forEach( function(valor, indice, array) {
@@ -114,20 +124,21 @@ const crearFilas = ( data ) => {
                 </td>
             </tr>
         `
-        bodyTable.innerHTML = html;
-        agregarEventosBotonesTabla();
     });
+    // pintamos la tabla
+    bodyTable.innerHTML = html;
+    // creamos los eventos de los botones dentro de la tabla
+    agregarEventosBotonesTabla();
 }
 
-
-
-
+// este metodo toma los botones genereados en la tabla y los activa a la espera del evento click
 const agregarEventosBotonesTabla = () =>{
     // agregamos eventos a los botones
-    var btnEliminar = document.getElementsByClassName("btnEliminar");
-    var btnVerTelefonos = document.getElementsByClassName("btnVerTelefonos");
-    var btnAgregarTelefono = document.getElementsByClassName("btnAgregarTelefono");
+    const btnEliminar = document.getElementsByClassName("btnEliminar");
+    const btnVerTelefonos = document.getElementsByClassName("btnVerTelefonos");
+    const btnAgregarTelefono = document.getElementsByClassName("btnAgregarTelefono");
     const btnEditarUsuario = document.getElementsByClassName('btnEditarUsuario');
+    // cada uno de estos for recorre los elementos para que espere un click
     for (var i = 0; i < btnEliminar.length; i++) {
         btnEliminar[i].addEventListener('click', eliminarRegistro, false);
     }
@@ -141,9 +152,12 @@ const agregarEventosBotonesTabla = () =>{
         btnEditarUsuario[i].addEventListener('click', consultarContacto, false);
     }
 }
+
+// este metodo elimina un registro de contacto
 const eliminarRegistro = async (e) => {
-    const response = await axios.delete(`http://agenda-interesse.kame.house/api/users/${e.target.dataset.id}`);
+    const response = await axios.delete(`/api/users/${e.target.dataset.id}`);
     const data = await response.data;
+    // si se elimino de forma correcta notificamos
     if( data.status == true ){
         Swal.fire({
             position: 'top-end',
@@ -151,16 +165,19 @@ const eliminarRegistro = async (e) => {
             title: 'Registro eliminado',
             showConfirmButton: false,
             timer: 1500
-        })    
+        })
+        // recargamos la tabla de contactos
         consultarContactos();
     }
 }
+//Consultamos los telefonos registrados para un contacto.
 const verTelefonos = async (e) => {
+    // limpiamos el contenido de la modal para que siempre este sin datos
+    // telefonosContacto hace referencia al body de la modal que mustra los telefonos
+    // si no se limpia se veran los telefonos de una consulta pasada.
     telefonosContacto.innerHTML = '';
-    // http://agenda-interesse.kame.house/api/users/11
-    const response = await axios.get(`http://agenda-interesse.kame.house/api/users/${e.target.dataset.id}`);
+    const response = await axios.get(`/api/users/${e.target.dataset.id}`);
     const data = await response.data.data.telefonos;
-    console.log(data)
     // pintamos los telefonos en la vista
     let html = '<ul class="list-group">';
     data.forEach( function(valor, indice, array) {
@@ -180,10 +197,14 @@ const verTelefonos = async (e) => {
         `
     });
     html += '</ul>';
+    // pintamos los telefonos de la consulta
     telefonosContacto.innerHTML = html;
+    // agregamos eventos sl boton de eliminar numero.
     agregarEventosBotonesNumero();
 }
 
+// esta funcion hace que al listado de numeros se pueda dar clik y mandar a llamar el 
+// metodo eliminarNumero.
 const agregarEventosBotonesNumero = () =>{
     // agregamos eventos a los botones
     var btnRemoveNumber = document.getElementsByClassName("btnRemoveNumber");
@@ -191,23 +212,27 @@ const agregarEventosBotonesNumero = () =>{
         btnRemoveNumber[i].addEventListener('click', eliminarNumero, false);
     }
 }
+// este metodo solo agrega el id del usuario en un input oculto.
 const agregarTelefonos = (e) => {
     document.querySelector('#user_id').value = e.target.dataset.id;
 }
+// Este metodo consulta un contacto y se usa para llenar el formulario de editar contacto.
 const consultarContacto = async (e) => {
     document.querySelector('#user_id_edit').value = e.target.dataset.id; 
-    // http://agenda-interesse.kame.house/api/users/11
-    const response = await axios.get(`http://agenda-interesse.kame.house/api/users/${e.target.dataset.id}`);
+    const response = await axios.get(`/api/users/${e.target.dataset.id}`);
     const data = await response.data;
     if( data.status == true ){
+        // hacemos que los inputs de editar se llenen con la informacion.
         document.getElementById('name-edit').value= data.data.nombre;
         document.getElementById('email-edit').value= data.data.email;
     }
 }
-
+// este metodo hace la solicitud de eliminar el contacto.
+// el parametro e es el elemento que recivio el click el cual tiene un data atributo
+// llamado id que es el id del numero que debe solicitar eliminar.
 const eliminarNumero = async (e) => {
     // console.log(e.target.dataset.id)
-    const response = await axios.delete(`http://agenda-interesse.kame.house/api/phones/${e.target.dataset.id}`);
+    const response = await axios.delete(`/api/phones/${e.target.dataset.id}`);
     const data = await response.data;
     if( data.status == true ){
         Swal.fire({
@@ -216,8 +241,9 @@ const eliminarNumero = async (e) => {
             title: 'Registro eliminado',
             showConfirmButton: false,
             timer: 1500
-        })    
-       e.target.parentNode.parentNode.parentNode.remove()
+        });
+        // eliminamos el elemento en la vista.
+        e.target.parentNode.parentNode.parentNode.remove()
     }
 }
 
@@ -244,6 +270,8 @@ const agregarNumero = async () => {
     }
 }
 
+// este metodo se encarga de realizar la solicitud para editar el nombre y correo
+// de un contacto.
 const  editarContacto= async () => {
     const form = crearFormularioEditarUsuario();
     limpiarErrores( form );
@@ -268,12 +296,10 @@ const  editarContacto= async () => {
     }
 }
 
-
-
 // Metodo para enviar el formulario de numero
 const enviarNumero = async ( form ) => {
     try{
-        const response = await axios.post("http://agenda-interesse.kame.house/api/phones", form);
+        const response = await axios.post("/api/phones", form);
         const data = await response.data;
         // limpiiamos el formulario y cerramos la modal
         document.getElementById("agregarTelefono").reset();
@@ -285,16 +311,13 @@ const enviarNumero = async ( form ) => {
         return err.response.data;
     }
 }
-
+// este metodo se manda a llamar arriba  y es el metodo que realiza la peticion
+// con axios para editar la informacion del contacto.
 const enviarEditaUsuario = async ( form ) => {
-    console.log( form );
     try{
         const user_id = document.querySelector('#user_id_edit').value.trim()
-        const response = await axios.put(`http://agenda-interesse.kame.house/api/users/${user_id}`, form);
+        const response = await axios.put(`/api/users/${user_id}`, form);
         const data = await response.data;
-        // limpiiamos el formulario y cerramos la modal
-        // document.getElementById("formEditarUsuario").reset();
-        // 
         return data;
     }catch (err) {
         // en caso de retornar un 422 de validacion del formulario
@@ -311,9 +334,7 @@ const crearFormularioNumero = () => {
     }
     return form;
 }
-
-
-
+// Metodo para crear el formularo para editar un contacto.
 const crearFormularioEditarUsuario = () => {
     const form = {
         'name':document.querySelector('#name-edit').value.trim(),
@@ -321,10 +342,6 @@ const crearFormularioEditarUsuario = () => {
     }
     return form;
 }
-
-/*********/
-
-
 
 /****** AddEvents ******/
 const addEventsListener = () =>{

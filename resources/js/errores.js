@@ -24,7 +24,6 @@ export const notificarErroresTelefono = ( errores ) => {
     }
 }
 
-
 // metodo para notificar errores en el formulario al editar usuario
 export const notificarErroresEditarUsuario = ( errores ) => {
     for (let clave in errores){

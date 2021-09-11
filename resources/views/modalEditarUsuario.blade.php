@@ -11,7 +11,7 @@
                     <div class="col-sm-12">
                         <h5>Editar Nombre y correo.</h5>
                     </div>
-                    <input type="text" id="user_id_edit" >
+                    <input type="hidden" id="user_id_edit" >
                     <div class="col-sm-6 mt-2 mb-2">
                         <label for="name-edit" class="form-label">Nombre</label>
                         <input type="text" class="form-control" id="name-edit" placeholder="Luis Eduardo">

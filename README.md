@@ -7,11 +7,15 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+# Vista previa
+
+<p align="center"><img src="./ImageReadme/imagenMuestra.png"  width="600"></p>
+
 ## Configuración inicial
 
 Después de clonar el proyecto se debe realizar las siguientes configuraciones.
 
-### Instalaciones requeridas
+## Instalaciones requeridas
 
 Instalamos lo requerido con composer, para esto en la terminal ejecutamos:
 

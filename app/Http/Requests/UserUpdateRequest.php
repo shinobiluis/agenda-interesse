@@ -25,7 +25,10 @@ class UserUpdateRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'email' => 'required|unique:users',
+            // este metodo valida si se el campo no cambia es decir si se entrega
+            // el mismo correo permite que pase pero si se cambia el correo no puede 
+            // repetirce con otro correo.
+            'email' => 'required|unique:users,email,'.$this->route('user')->id,
         ];
     }
 

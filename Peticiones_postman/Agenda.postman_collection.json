@@ -1,0 +1,538 @@
+{
+	"info": {
+		"_postman_id": "8a34d35a-c620-44b0-a04e-1b1e5a0cd286",
+		"name": "Agenda",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "telefono",
+			"item": [
+				{
+					"name": "Insertar numeros",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "alias_number",
+									"value": "alias",
+									"type": "text"
+								},
+								{
+									"key": "number",
+									"value": "5516122063",
+									"type": "text"
+								},
+								{
+									"key": "user_id",
+									"value": "3",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://agenda-interesse.kame.house/api/phones",
+							"protocol": "http",
+							"host": [
+								"agenda-interesse",
+								"kame",
+								"house"
+							],
+							"path": [
+								"api",
+								"phones"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "editar numero",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "alias_number",
+									"value": "cassaaaa",
+									"type": "text"
+								},
+								{
+									"key": "number",
+									"value": "5516122063",
+									"type": "text"
+								},
+								{
+									"key": "user_id",
+									"value": "4788",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "http://agenda-interesse.kame.house/api/phones/1",
+							"protocol": "http",
+							"host": [
+								"agenda-interesse",
+								"kame",
+								"house"
+							],
+							"path": [
+								"api",
+								"phones",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "consultar un numero",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Luis Eduardo",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "4rr4rrr44rrr@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "alias_number",
+									"value": "casa",
+									"type": "text"
+								},
+								{
+									"key": "number",
+									"value": "5516122063",
+									"type": "text"
+								},
+								{
+									"key": "alias_direction",
+									"value": "qwertyuio",
+									"type": "text"
+								},
+								{
+									"key": "direction",
+									"value": "a111111111",
+									"type": "text"
+								},
+								{
+									"key": "postal_code",
+									"value": "55040",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://agenda-interesse.kame.house/api/phones/1",
+							"protocol": "http",
+							"host": [
+								"agenda-interesse",
+								"kame",
+								"house"
+							],
+							"path": [
+								"api",
+								"phones",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "eliminar numero",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://agenda-interesse.kame.house/api/phones/3",
+							"protocol": "http",
+							"host": [
+								"agenda-interesse",
+								"kame",
+								"house"
+							],
+							"path": [
+								"api",
+								"phones",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "usuarios",
+			"item": [
+				{
+					"name": "Registrar usuarios",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Luis Eduardo",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "4rr4rrr44rrrrrrrr@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "alias_number",
+									"value": "casa",
+									"type": "text"
+								},
+								{
+									"key": "number",
+									"value": "5516122063",
+									"type": "text"
+								},
+								{
+									"key": "alias_direction",
+									"value": "qwertyuio",
+									"type": "text"
+								},
+								{
+									"key": "direction",
+									"value": "a111111111",
+									"type": "text"
+								},
+								{
+									"key": "postal_code",
+									"value": "55040",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://agenda-interesse.kame.house/api/users",
+							"protocol": "http",
+							"host": [
+								"agenda-interesse",
+								"kame",
+								"house"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar usuario",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://agenda-interesse.kame.house/api/users/1",
+							"protocol": "http",
+							"host": [
+								"agenda-interesse",
+								"kame",
+								"house"
+							],
+							"path": [
+								"api",
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Editar usuario",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "name",
+									"value": "Luis Eduardo Alcantara",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "adios1@gmail.com",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://agenda-interesse.kame.house/api/users/1",
+							"protocol": "http",
+							"host": [
+								"agenda-interesse",
+								"kame",
+								"house"
+							],
+							"path": [
+								"api",
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "consultar todos los usuarios",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Luis Eduardo",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "4rr4rrr44rrr@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "alias_number",
+									"value": "casa",
+									"type": "text"
+								},
+								{
+									"key": "number",
+									"value": "5516122063",
+									"type": "text"
+								},
+								{
+									"key": "alias_direction",
+									"value": "qwertyuio",
+									"type": "text"
+								},
+								{
+									"key": "direction",
+									"value": "a111111111",
+									"type": "text"
+								},
+								{
+									"key": "postal_code",
+									"value": "55040",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://agenda-interesse.kame.house/api/users",
+							"protocol": "http",
+							"host": [
+								"agenda-interesse",
+								"kame",
+								"house"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "consultar usuario",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "name",
+									"value": "Luis Eduardo",
+									"type": "text"
+								},
+								{
+									"key": "email",
+									"value": "4rr4rrr44rrr@gmail.com",
+									"type": "text"
+								},
+								{
+									"key": "alias_number",
+									"value": "casa",
+									"type": "text"
+								},
+								{
+									"key": "number",
+									"value": "5516122063",
+									"type": "text"
+								},
+								{
+									"key": "alias_direction",
+									"value": "qwertyuio",
+									"type": "text"
+								},
+								{
+									"key": "direction",
+									"value": "a111111111",
+									"type": "text"
+								},
+								{
+									"key": "postal_code",
+									"value": "55040",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://agenda-interesse.kame.house/api/users/3",
+							"protocol": "http",
+							"host": [
+								"agenda-interesse",
+								"kame",
+								"house"
+							],
+							"path": [
+								"api",
+								"users",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

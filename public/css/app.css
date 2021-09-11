@@ -1,6 +1,7 @@
 .wrapperAddContact{
     position: fixed;
     bottom:0;
+    left:0;
     width: 100%;
     text-align:center;
     padding: 10px 0;
@@ -16,4 +17,10 @@
 .btn i{
     pointer-events: none;
 }
+
+/* .list-group-item .btn{ */
+/*     position: absolute; */
+/*     right: 0; */
+/* } */
+
 
